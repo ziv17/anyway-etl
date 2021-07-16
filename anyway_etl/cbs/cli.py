@@ -27,3 +27,39 @@ def import_to_datastore(**kwargs):
     """Import the data from yearly directories to the DB"""
     from . import import_to_datastore
     import_to_datastore.main(**kwargs)
+
+
+@cbs.command()
+@click.option('--load-start-year')
+def parse_accidents(**kwargs):
+    """Parse the accident markers from yearly directories to datapackage"""
+    from . import parse_accidents
+    parse_accidents.main(**kwargs)
+
+
+@cbs.command()
+@click.option('--load-start-year')
+def parse_involved(**kwargs):
+    """Parse the involved from yearly directories to datapackage"""
+    from . import parse_involved
+    parse_involved.main(**kwargs)
+
+
+@cbs.command()
+@click.option('--load-start-year')
+def parse_vehicles(**kwargs):
+    """Parse the vehicles from yearly directories to datapackage"""
+    from . import parse_vehicles
+    parse_vehicles.main(**kwargs)
+
+
+@cbs.command()
+@click.option('--load-start-year')
+def parse_all(**kwargs):
+    from . import parse_vehicles, parse_accidents, parse_involved
+    print("Parsing accidents...")
+    parse_accidents.main(**kwargs)
+    print("Parsing vehicles...")
+    parse_vehicles.main(**kwargs)
+    print("Parsing involved...")
+    parse_involved.main(**kwargs)

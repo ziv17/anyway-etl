@@ -4,3 +4,6 @@
 venv
 *.egg-info
 __pycache__
+.airflow
+.airflow.env
+.etl.env
