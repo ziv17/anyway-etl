@@ -1,12 +1,12 @@
 from airflow.operators.bash import BashOperator
 
-from anyway_etl_airflow.config import ANYWAY_ETL_VENV, ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS
+from anyway_etl_airflow.config import ANYWAY_ETL_VENV, ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS, ANYWAY_AIRFLOW_SERVER_ROOTDIR
 
 
 def get_pip_install_deps():
     if not ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS:
         return ''
-    return '{}/bin/pip install -qqr https://raw.githubusercontent.com/hasadna/anyway-etl/main/requirements.txt && '.format(ANYWAY_ETL_VENV)
+    return '{}/pip_install_deps.sh && '.format(ANYWAY_AIRFLOW_SERVER_ROOTDIR)
 
 
 def get_print_dag_run():
