@@ -1,0 +1,5 @@
+.airflow
+.data
+*.egg-info
+venv
+docs

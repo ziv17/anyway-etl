@@ -1,0 +1,23 @@
+# this docker-compose file should be used together with the main anyway docker-compose file
+# see anyway documentation for details
+version: '3'
+
+services:
+  anyway-etl:
+    build: ../anyway-etl
+    volumes:
+      - anyway_etl_data:/var/anyway-etl-data
+      - ../anyway-etl:/srv
+      - ../anyway:/src/anyway
+
+  anyway-etl-nginx:
+    build: ../anyway-etl/nginx
+
+  airflow-webserver:
+    build: ../anyway-etl/airflow_server
+
+  airflow-scheduler:
+    build: ../anyway-etl/airflow_server
+    volumes:
+      - "airflow-home:/var/airflow"
+      - anyway_etl_data:/var/anyway-etl-data
