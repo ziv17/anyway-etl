@@ -1,5 +1,5 @@
 import pandas as pd
-from anyway.models import WazeAlert
+from anyway.models import WazeAlert, WazeTrafficJams
 
 
 def __convert_to_bool(value):
@@ -52,9 +52,43 @@ def _parse_alerts(rows):
     return alerts_df.to_dict("records")
 
 
+def __parse_jams(rows):
+    jams_df = pd.json_normalize(rows)
+    jams_df["created_at"] = pd.to_datetime(jams_df["pubMillis"], unit="ms")
+    jams_df["geom"] = jams_df["line"].apply(
+        lambda l: "LINESTRING({})".format(
+            ",".join(["{} {}".format(nz["x"], nz["y"]) for nz in l])
+        )
+    )
+    jams_df["line"] = jams_df["line"].apply(str)
+    jams_df["segments"] = jams_df["segments"].apply(str)
+    jams_df["turnType"] = jams_df["roadType"].fillna(-1)
+    jams_df.drop(["country", "pubMillis"], axis=1, inplace=True)
+    jams_df.rename(
+        {
+            "speedKMH": "speed_kmh",
+            "turnType": "turn_type",
+            "roadType": "road_type",
+            "endNode": "end_node",
+            "blockingAlertUuid": "blocking_alert_uuid",
+            "startNode": "start_node",
+        },
+        axis=1,
+        inplace=True,
+    )
+
+    for key in jams_df.keys():
+        if jams_df[key] is None or key not in [
+            field.name for field in WazeTrafficJams.__table__.columns
+        ]:
+            jams_df.drop([key], axis=1, inplace=True)
+
+    return jams_df.to_dict("records")
+
+
 class WazeParserRetriever:
     def __init__(self):
-        self.__parsers = {"alerts": _parse_alerts}
+        self.__parsers = {"alerts": _parse_alerts, "jams": __parse_jams}
 
     def get_parser(self, field: str):
         return self.__parsers.get(field, lambda rows: rows)
