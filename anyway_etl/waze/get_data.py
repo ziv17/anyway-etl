@@ -10,9 +10,8 @@ def get_waze_data() -> dict:
 
     data_flows = data_flows_handler.get_data_flows(waze_data)
 
-    results = [data_flow.process() for data_flow in data_flows]
-
-    print()
+    for data_flow in data_flows:
+        data_flow.proccess()
 
 
 if __name__ == "__main__":
