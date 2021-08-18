@@ -1,5 +1,3 @@
-import requests
-
 from anyway_etl.waze.utils import WazeDataRetriever, WazeDataFlowsHandler
 
 
