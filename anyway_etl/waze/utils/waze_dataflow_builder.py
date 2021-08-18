@@ -10,7 +10,7 @@ class WazeDataFlowBuilder:
     def __get_items(self, waze_data: dict, field: str) -> list:
         return waze_data.get(field, [])
 
-    def build_data_flow(self, waze_data: dict, field: str) -> DF.Flow:
+    def build_dataflow(self, waze_data: dict, field: str) -> DF.Flow:
 
         get_parser = self.__parser_retriever.get_parser
 

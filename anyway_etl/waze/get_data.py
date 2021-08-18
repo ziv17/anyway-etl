@@ -6,7 +6,7 @@ def get_waze_data() -> dict:
 
     waze_data = data_retriever.get_data()
 
-    dataflows = dataflows_handler.get_data_flows(waze_data)
+    dataflows = dataflows_handler.get_dataflows(waze_data)
 
     for dataflow in dataflows:
         dataflow.process()
