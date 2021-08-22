@@ -86,7 +86,7 @@ def __parse_jams(rows):
     return jams_df.to_dict("records")
 
 
-class WazeParserRetriever:
+class ParserRetriever:
     def __init__(self):
         self.__parsers = {"alerts": _parse_alerts, "jams": __parse_jams}
 
