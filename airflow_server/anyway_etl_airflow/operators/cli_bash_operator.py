@@ -1,6 +1,9 @@
 from airflow.operators.bash import BashOperator
 
-from anyway_etl_airflow.config import ANYWAY_ETL_VENV, ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS, ANYWAY_AIRFLOW_SERVER_ROOTDIR
+from anyway_etl_airflow.config import (
+    ANYWAY_ETL_VENV, ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS, ANYWAY_AIRFLOW_SERVER_ROOTDIR,
+    ANYWAY_ETL_ALERT_EMAILS
+)
 
 
 def get_pip_install_deps():
@@ -23,4 +26,6 @@ class CliBashOperator(BashOperator):
             print_dag_run=get_print_dag_run(),
             pip_install_deps=get_pip_install_deps()
         )
+        if ANYWAY_ETL_ALERT_EMAILS:
+            kwargs['email'] = ANYWAY_ETL_ALERT_EMAILS
         super(CliBashOperator, self).__init__(**kwargs)
