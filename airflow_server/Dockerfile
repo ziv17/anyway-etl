@@ -3,6 +3,8 @@ FROM python:3.8@sha256:caa7d8d6bfaa181f30c5a5074b81b6963246615f0140dca1d86e1e98e
 RUN apt-get update && apt-get install -y --no-install-recommends freetds-bin \
         ldap-utils libffi6 libsasl2-2 libsasl2-modules libssl1.1 \
         locales lsb-release sasl2-bin sqlite3 unixodbc brotli jq
+RUN curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/v1.16.7/bin/linux/amd64/kubectl" &&\
+    chmod +x /usr/local/bin/kubectl
 WORKDIR /srv
 COPY pip_install_airflow.sh ./pip_install_airflow.sh
 RUN pip install --upgrade pip && ./pip_install_airflow.sh
