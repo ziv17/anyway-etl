@@ -1,8 +1,8 @@
-from anyway_etl.waze.utils import WazeDataRetriever, WazeDataFlowsHandler
+from anyway_etl.waze.utils import DataRetriever, WazeDataFlowsHandler
 
 
 def get_waze_data() -> dict:
-    data_retriever, dataflows_handler = WazeDataRetriever(), WazeDataFlowsHandler()
+    data_retriever, dataflows_handler = DataRetriever(), WazeDataFlowsHandler()
 
     waze_data = data_retriever.get_data()
 
