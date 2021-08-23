@@ -1,5 +1,5 @@
 click==8.0.1
-dataflows==0.2.17
+https://github.com/OriHoch/dataflows/archive/refs/heads/set-correct-umask-on-files.zip#egg=dataflows
 pandas==1.3.0
 psycopg2==2.8.6
 

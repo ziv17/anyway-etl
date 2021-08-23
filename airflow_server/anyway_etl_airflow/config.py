@@ -11,3 +11,5 @@ if not ANYWAY_ETL_VENV:
 ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS = os.environ.get('ANYWAY_ETL_AIRFLOW_PIP_INSTALL_DEPS') == 'yes'
 
 ANYWAY_BRANCH = os.environ.get('ANYWAY_BRANCH', 'dev')
+
+ANYWAY_ETL_ALERT_EMAILS = [email.strip() for email in (os.environ.get('ANYWAY_ETL_ALERT_EMAILS') or '').split(',') if email.strip()]
