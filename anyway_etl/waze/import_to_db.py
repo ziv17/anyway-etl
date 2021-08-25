@@ -10,7 +10,7 @@ def _get_saved_data(datapackage_filename):
 
 
 @session_decorator
-def _import_data(session, field: str, data):
+def _import_data(session, field: str, data: list):
     data_type = TYPES_MAPPING[field]
     session.bulk_insert_mappings(data_type, data)
     session.commit()
