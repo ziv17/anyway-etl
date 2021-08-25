@@ -1,13 +1,12 @@
 from anyway_etl.waze.utils.parser_retriever import ParserRetriever
-from anyway_etl.waze.utils.importer_handler import ImporterHandler
 from anyway_etl.waze.utils.dataflow_builder import DataflowBuilder
 from anyway_etl.waze.utils.dataflows_handler import DataflowsHandler
 from anyway_etl.waze.utils.data_retriever import DataRetriever
 
+
 def get_waze_data():
     parser_retriever = ParserRetriever()
-    importer_handler = ImporterHandler()
-    dataflow_builder = DataflowBuilder(parser_retriever, importer_handler)
+    dataflow_builder = DataflowBuilder(parser_retriever)
     dataflows_handler = DataflowsHandler(dataflow_builder)
     data_retriever = DataRetriever()
 
