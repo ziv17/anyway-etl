@@ -10,3 +10,27 @@ API_PARAMS = {
     "types": "traffic,alerts,irregularities",
     "polygon": ISRAEL_POLYGON,
 }
+
+
+def _convert_to_bool(value):
+    if isinstance(value, bool):
+        return value
+    else:
+        return str(value).lower() in ("yes", "true", "t", "1")
+
+
+COLUMNS_MAPPING = {
+    "alerts": {
+        "road_type": {"default": -1, "conversion": lambda value: value, "type": int},
+        "number_thumbs_up": {
+            "default": 0,
+            "conversion": lambda value: value,
+            "type": int,
+        },
+        "report_by_municipality_user": {
+            "default": False,
+            "conversion": _convert_to_bool,
+            "type": bool,
+        },
+    }
+}
