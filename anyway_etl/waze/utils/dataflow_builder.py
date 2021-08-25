@@ -11,13 +11,17 @@ class DataflowBuilder:
         return os.path.dirname(os.path.dirname(__file__))
 
     def get_items(self, waze_data: dict, field: str) -> list:
-        return waze_data.get(field, [])
+        raw_data = waze_data.get(field, [])
+
+        parser = self.parser_retriever.get_parser(field)
+
+        parsed_data = parser(raw_data)
+
+        return parsed_data
 
     def build_dataflow(self, waze_data: dict, field: str) -> DF.Flow:
-        parser = self.parser_retriever.get_parser(field)
+        items = self.get_items(waze_data, field)
 
         output_path = os.path.join(self.parent_directory, f"waze_{field}")
 
-        return DF.Flow(
-            self.get_items(waze_data, field), parser, DF.dump_to_path(output_path)
-        )
+        return DF.Flow(items, DF.dump_to_path(output_path))
