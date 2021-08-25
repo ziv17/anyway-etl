@@ -1,10 +1,10 @@
 import pandas as pd
 from anyway.models import WazeAlert, WazeTrafficJams
-from anyway_etl.waze.config import COLUMNS_MAPPING
+from anyway_etl.waze.config import COLUMNS_MAPPING, ALERTS, JAMS
 
 
 def _parse_alerts(rows):
-    columns_mapping = COLUMNS_MAPPING["alerts"]
+    columns_mapping = COLUMNS_MAPPING[ALERTS]
 
     alerts_df = pd.json_normalize(rows)
 
@@ -93,7 +93,7 @@ def _parse_jams(rows):
 
 class ParserRetriever:
     def __init__(self):
-        self.__parsers = {"alerts": _parse_alerts, "jams": _parse_jams}
+        self.__parsers = {ALERTS: _parse_alerts, JAMS: _parse_jams}
 
     def get_parser(self, field: str):
         return self.__parsers.get(field, lambda rows: rows)

@@ -2,6 +2,12 @@ ISRAEL_POLYGON = "33.662000,32.556000;34.722000,33.004000;35.793000,33.370000;35
 
 API_URL = "https://il-georss.waze.com/rtserver/web/TGeoRSS"
 
+ALERTS = "alerts"
+
+JAMS = "jams"
+
+FIELDS = [ALERTS, JAMS]
+
 
 API_PARAMS = {
     "format": "JSON",
@@ -20,7 +26,7 @@ def _convert_to_bool(value):
 
 
 COLUMNS_MAPPING = {
-    "alerts": {
+    ALERTS: {
         "road_type": {"default": -1, "conversion": lambda value: value, "type": int},
         "number_thumbs_up": {
             "default": 0,
