@@ -1,9 +1,11 @@
 import os
 import dataflows as DF
 
+from anyway_etl.waze.utils.parser_retriever import ParserRetriever
+
 
 class DataflowBuilder:
-    def __init__(self, parser_retriever):
+    def __init__(self, parser_retriever: ParserRetriever):
         self.parser_retriever = parser_retriever
 
     @property
