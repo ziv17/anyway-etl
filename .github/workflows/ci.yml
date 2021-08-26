@@ -1,6 +1,7 @@
 name: CI
 on:
   push:
+  pull_request:
 jobs:
   ci:
     runs-on: ubuntu-18.04
@@ -48,7 +49,7 @@ jobs:
         elif [ "${TAG_NAME}" != "" ]; then
           PUSH_TAG="${TAG_NAME}"
         fi
-        if [ "${PUSH_TAG}" != "" ]; then
+        if [ "${PUSH_TAG}" != "" ] && [ "${HASADNA_K8S_DEPLOY_KEY}" != "" ]; then
           docker tag etl "${ETL_IMAGE_NAME}:${PUSH_TAG}" &&\
           docker push "${ETL_IMAGE_NAME}:${PUSH_TAG}" &&\
           docker tag airflow "${AIRFLOW_IMAGE_NAME}:${PUSH_TAG}" &&\
