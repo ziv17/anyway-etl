@@ -3,6 +3,7 @@ import dataflows as DF
 
 from anyway_etl.waze.config import FIELDS, TYPES_MAPPING
 from anyway_etl.db import session_decorator
+from anyway_etl.config import ANYWAY_ETL_DATA_ROOT_PATH
 
 
 def _get_saved_data(datapackage_filename):
@@ -18,9 +19,7 @@ def _import_data(session, field: str, data: list):
 
 def import_waze_data_to_db():
     for field in FIELDS:
-        dir = f"waze_{field}"
-
-        full_path = os.path.join(os.path.dirname(__file__), dir)
+        full_path = os.path.join(ANYWAY_ETL_DATA_ROOT_PATH, "waze", field)
 
         data_path = os.path.join(full_path, "datapackage.json")
 
