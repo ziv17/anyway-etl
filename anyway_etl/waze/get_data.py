@@ -16,7 +16,3 @@ def get_waze_data():
 
     for dataflow in dataflows:
         dataflow.process()
-
-
-if __name__ == "__main__":
-    get_waze_data()

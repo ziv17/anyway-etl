@@ -6,7 +6,7 @@ from anyway_etl.db import session_decorator
 from anyway_etl.config import ANYWAY_ETL_DATA_ROOT_PATH
 
 
-def _get_saved_data(datapackage_filename):
+def _get_saved_data(datapackage_filename) -> list:
     return DF.Flow(DF.load(datapackage_filename)).results()[0][0]
 
 
@@ -26,7 +26,3 @@ def import_waze_data_to_db():
         data = _get_saved_data(datapackage_filename=data_path)
 
         _import_data(field, data)
-
-
-if __name__ == "__main__":
-    import_waze_data_to_db()
