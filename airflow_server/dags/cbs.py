@@ -27,4 +27,6 @@ with DAG('cbs', **dag_kwargs) as cbs_dag:
         CliBashOperator('anyway-etl cbs parse-vehicles', task_id='parse-vehicles'),
     ] >> CliBashOperator(
         'anyway-etl cbs import-to-datastore', task_id='import-to-datastore'
+    ) >> CliBashOperator(
+        'anyway-etl cbs check-data-in-datastore', task_id='check-data-in-datastore'
     )
