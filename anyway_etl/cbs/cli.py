@@ -63,3 +63,10 @@ def parse_all(**kwargs):
     parse_vehicles.main(**kwargs)
     print("Parsing involved...")
     parse_involved.main(**kwargs)
+
+
+@cbs.command()
+@click.option('--last-update-ttl-days', type=int, default=180)
+def check_data_in_datastore(**kwargs):
+    from . import check_data_in_datastore
+    exit(0 if check_data_in_datastore.main(**kwargs) else 1)
