@@ -252,8 +252,9 @@ def import_involved(session, provider_code, year):
 def import_vehicles(session, provider_code, year):
     print("Importing vehicles")
     vehicles_result = get_saved_data(os.path.join(CBS_VEHICLES_ROOT_PATH, 'datapackage.json'), provider_code, year)
-    print("Finished Importing vehicles")
     session.bulk_insert_mappings(Vehicle, vehicles_result)
+    session.commit()
+    print("Finished Importing vehicles")
     return len(vehicles_result)
 
 
