@@ -66,7 +66,7 @@ def parse_all(**kwargs):
 
 
 @cbs.command()
-@click.option('--last-update-ttl-days', type=int, default=180)
+@click.option('--last-update-ttl-days', type=int, default=90)
 def check_data_in_datastore(**kwargs):
     from . import check_data_in_datastore
     exit(0 if check_data_in_datastore.main(**kwargs) else 1)
