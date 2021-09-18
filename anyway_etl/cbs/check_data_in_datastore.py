@@ -23,5 +23,5 @@ def main(session, last_update_ttl_days):
         print('OK: all tables updated in last {} days'.format(last_update_ttl_days))
         return True
     else:
-        print('ERROR: some tables were not updated in last {} days'.format(last_update_ttl_days))
+        print('ERROR: some tables were not updated in last {} days or tables do not have the same max timestamp'.format(last_update_ttl_days))
         return False
