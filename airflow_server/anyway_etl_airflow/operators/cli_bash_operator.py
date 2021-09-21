@@ -20,6 +20,7 @@ class CliBashOperator(BashOperator):
 
     def __init__(self, cmd, **kwargs):
         assert not kwargs.get('bash_command')
+        self._skip_if = kwargs.pop('skip_if', None)
         kwargs['bash_command'] = '{print_dag_run}{pip_install_deps}{ANYWAY_ETL_VENV}/bin/{cmd}'.format(
             ANYWAY_ETL_VENV=ANYWAY_ETL_VENV,
             cmd=cmd,
@@ -29,3 +30,8 @@ class CliBashOperator(BashOperator):
         if ANYWAY_ETL_ALERT_EMAILS:
             kwargs['email'] = ANYWAY_ETL_ALERT_EMAILS
         super(CliBashOperator, self).__init__(**kwargs)
+
+    def execute(self, context):
+        if self._skip_if and self._skip_if(context):
+            self.bash_command = 'echo skipping operator due to skip_if condition'
+        return super(CliBashOperator, self).execute(context)
