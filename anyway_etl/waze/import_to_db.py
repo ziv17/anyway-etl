@@ -82,7 +82,3 @@ def import_waze_data_to_db():
         )
 
         _import_data(field, data)
-
-
-if __name__ == "__main__":
-    import_waze_data_to_db()
