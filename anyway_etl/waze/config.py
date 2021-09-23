@@ -10,6 +10,8 @@ JAMS = "jams"
 
 FIELDS = [ALERTS, JAMS]
 
+UUID = "uuid"
+
 
 API_PARAMS = {
     "format": "JSON",
