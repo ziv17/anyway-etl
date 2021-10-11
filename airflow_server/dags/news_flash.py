@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 from airflow import DAG
 from airflow.utils.dates import days_ago
 
@@ -27,4 +29,17 @@ with DAG('update-news-flash', **dag_kwargs, schedule_interval=None,
         'anyway-etl anyway-kubectl-exec python3 main.py '
         'update-news-flash update --news_flash_id {{ dag_run.conf["news_flash_id"] }}',
         task_id='update-news-flash'
+    )
+
+
+with DAG('test-anyway-kubectl-exec', **dag_kwargs, schedule_interval=None) as test_anyway_kubectl_Exec:
+    CliBashOperator(
+        '''anyway-etl anyway-kubectl-exec -- python3 -c "{}"'''.format(dedent("""
+        import logging, time
+        logging.basicConfig(level=logging.DEBUG)
+        for i in range(20):
+          logging.info(str(i))
+          time.sleep(2)
+        """)),
+        task_id='test-anyway-kubectl-exec'
     )
