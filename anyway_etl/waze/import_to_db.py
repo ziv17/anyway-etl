@@ -82,7 +82,7 @@ def __get_insertion_flow(field: str) -> DF.Flow:
 
     handler = __get_row_handler(field)
 
-    return DF.Flow(DF.load(path), handler)
+    return DF.Flow(DF.load(data_path), handler)
 
 
 def import_waze_data_to_db():
