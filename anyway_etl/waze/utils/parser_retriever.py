@@ -1,8 +1,8 @@
 import pandas as pd
+from datetime import datetime
 
 from anyway.models import WazeAlert, WazeTrafficJams
 from anyway_etl.waze.config import COLUMNS_MAPPING, ALERTS, JAMS
-from anyway_etl.waze.utils.add_time import add_now_column
 
 
 def _parse_alerts(rows):
@@ -56,8 +56,8 @@ def _parse_alerts(rows):
         ]:
             alerts_df.drop([key], axis=1, inplace=True)
 
-    add_now_column(df=alerts_df, column_name="insertion_time")
-    add_now_column(df=alerts_df, column_name="update_time")
+    alerts_df["insertion_time"] = datetime.now()
+    alerts_df["update_time"] = datetime.now()
 
     return alerts_df.to_dict("records")
 
@@ -93,8 +93,8 @@ def _parse_jams(rows):
         ]:
             jams_df.drop([key], axis=1, inplace=True)
 
-    add_now_column(df=jams_df, column_name="insertion_time")
-    add_now_column(df=jams_df, column_name="update_time")
+    jams_df["insertion_time"] = datetime.now()
+    jams_df["update_time"] = datetime.now()
 
     return jams_df.to_dict("records")
 
