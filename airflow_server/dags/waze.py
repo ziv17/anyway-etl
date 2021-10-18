@@ -8,7 +8,7 @@ dag_kwargs = dict(
     default_args={
         "owner": "airflow",
     },
-    schedule_interval="@daily",
+    schedule_interval="*/5 * * * *",  # Every 5 minutes
     catchup=False,
     start_date=days_ago(2),
 )
