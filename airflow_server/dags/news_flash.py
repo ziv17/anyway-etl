@@ -15,7 +15,7 @@ dag_kwargs = dict(
 )
 
 
-with DAG('process-news-flash', **dag_kwargs, schedule_interval='0,30 * * * *') as process_news_flash_dag:
+with DAG('process-news-flash', **dag_kwargs, schedule_interval='*/5 * * * *') as process_news_flash_dag:
     CliBashOperator(
         'anyway-etl anyway-kubectl-exec python3 main.py process news-flash',
         task_id='process-news-flash'
