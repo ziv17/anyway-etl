@@ -1,18 +1,23 @@
 import os
 import dataflows as DF
 import pandas as pd
+import shutil
 from datetime import datetime
-from typing import Callable
+from typing import Callable, Optional
 from sqlalchemy.orm.session import Session
+from pprint import pprint
+from collections import defaultdict
 
-from anyway_etl.waze.config import FIELDS, TYPES_MAPPING, QUERIES
+
+from anyway_etl.waze.config import FIELDS, TYPES_MAPPING, QUERIES, \
+    WAZE_TYPE
 from anyway_etl.db import session_decorator
 from anyway_etl.config import ANYWAY_ETL_DATA_ROOT_PATH
 
 
 @session_decorator
-def __does_uuid_exist(session: Session, select_count_query: str, uuid: str) -> bool:
-    query_with_uuid = select_count_query.format(uuid=uuid)
+def __does_exist_in_db(session: Session, select_query: str, uuid: str) -> bool:
+    query_with_uuid = select_query.format(uuid=uuid)
 
     db_execution = session.execute(query_with_uuid)
 
@@ -27,67 +32,71 @@ def __does_uuid_exist(session: Session, select_count_query: str, uuid: str) -> b
 
 
 @session_decorator
-def __insert_to_db(session: Session, insert_query: str, row: dict) -> None:
-    row.pop("uuid", None)
+def __insert_to_db(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
+    rows_for_db = [row]
 
-    insert_query_with_values = insert_query.format(**row)
-
-    session.execute(insert_query_with_values)
-
+    session.bulk_insert_mappings(data_type, rows_for_db)
     session.commit()
 
 
 @session_decorator
-def __update_row(session: Session, update_query: str, row: dict) -> None:
-    row.pop("uuid", None)
+def __update_row(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
+    row['update_time'] = datetime.now()
 
-    row.pop("id", None)
+    uuid = row.get('uuid')
 
-    row.pop("insertion_time", None)
-
-    row["update_time"] = datetime.now()
-
-    update_query_with_values = update_query.format(**row)
-
-    session.execute(update_query_with_values)
-
+    session.query(data_type). \
+        filter_by(uuid=str(uuid)). \
+        update(row)
     session.commit()
 
 
-def __get_row_handler(field: str) -> Callable[[dict], None]:
+def __get_row_handler(field: str, stats: dict) -> Callable[[dict], None]:
     field_queries = QUERIES.get(field)
-
-    select_count_query = field_queries.get("select_count")
-
-    insert_query = field_queries.get("insert")
-
-    update_query = field_queries.get("update")
+    select_query = field_queries.get("select_count")
+    data_type = TYPES_MAPPING.get(field)
 
     def _handler(row: dict) -> None:
         uuid = row.get("uuid")
-        uuid_exists = __does_uuid_exist(select_count_query, uuid)
+        exists_in_db = __does_exist_in_db(select_query, uuid)
 
-        if uuid_exists:
-            __update_row(update_query, row)
-        else:
-            __insert_to_db(insert_query, row)
+        try:
+            if exists_in_db:
+                __update_row(data_type, row)
+                stats['updated_rows'] += 1
+            else:
+                __insert_to_db(data_type, row)
+                stats['inserted_rows'] += 1
+        except Exception as exc:
+            pprint(f'row with uuid {uuid} failed: {str(exc)}')
+            stats['failed_rows'] += 1
 
     return _handler
 
 
-def __get_insertion_flow(field: str) -> DF.Flow:
-    full_path = os.path.join(ANYWAY_ETL_DATA_ROOT_PATH, "waze", field)
+def __get_insertion_flow(field: str, path: str, stats: dict) -> DF.Flow:
+    handler = __get_row_handler(field, stats)
 
-    data_path = os.path.join(full_path, "datapackage.json")
-
-    handler = __get_row_handler(field)
-
-    return DF.Flow(DF.load(data_path), handler)
+    return DF.Flow(DF.load(path), handler)
 
 
-def import_waze_data_to_db():
+def import_waze_data_to_db() -> None:
     for field in FIELDS:
+        print(f'Importing waze {field} to DB...')
 
-        flow = __get_insertion_flow(field)
+        full_path = os.path.join(ANYWAY_ETL_DATA_ROOT_PATH, "waze", field)
+        data_path = os.path.join(full_path, "datapackage.json")
 
-        flow.process()
+        stats = defaultdict(int)
+
+        dataflow = __get_insertion_flow(field, path=data_path, stats=stats)
+
+        dataflow.process()
+
+        print('Finished!')
+        pprint(stats)
+        print(f'Removing local waze {field}...')
+
+        shutil.rmtree(path=data_path, ignore_errors=True)
+
+        print('Removed!')
