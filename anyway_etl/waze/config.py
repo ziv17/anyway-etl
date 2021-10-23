@@ -13,6 +13,8 @@ JAMS = "jams"
 
 FIELDS = [ALERTS, JAMS]
 
+REQUEST_TIMEOUT_IN_SECONDS = 30
+
 
 API_PARAMS = {
     "format": "JSON",
