@@ -33,9 +33,7 @@ def __does_exist_in_db(session: Session, select_query: str, uuid: str) -> bool:
 
 @session_decorator
 def __insert_to_db(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
-    rows_for_db = [row]
-
-    session.bulk_insert_mappings(data_type, rows_for_db)
+    session.add(data_type(**row))
 
 
 @session_decorator
