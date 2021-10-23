@@ -36,7 +36,6 @@ def __insert_to_db(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
     rows_for_db = [row]
 
     session.bulk_insert_mappings(data_type, rows_for_db)
-    session.commit()
 
 
 @session_decorator
@@ -48,6 +47,10 @@ def __update_row(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
     session.query(data_type). \
         filter_by(uuid=str(uuid)). \
         update(row)
+
+
+@session_decorator
+def __commit_all_changes_to_db(session: Session) -> None:
     session.commit()
 
 
@@ -93,8 +96,14 @@ def import_waze_data_to_db() -> None:
 
         dataflow.process()
 
-        print('Finished!')
+        print('Committing changes to DB...')
+
+        __commit_all_changes_to_db()
+
+        print(f'Finished importing {field}!')
+
         pprint(stats)
+
         print(f'Removing local waze {field}...')
 
         shutil.rmtree(path=data_path, ignore_errors=True)
