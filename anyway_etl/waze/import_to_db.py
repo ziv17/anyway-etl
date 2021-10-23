@@ -61,16 +61,12 @@ def __get_row_handler(field: str, stats: dict) -> Callable[[dict], None]:
         uuid = row.get("uuid")
         exists_in_db = __does_exist_in_db(select_query, uuid)
 
-        try:
-            if exists_in_db:
-                __update_row(data_type, row)
-                stats['updated_rows'] += 1
-            else:
-                __insert_to_db(data_type, row)
-                stats['inserted_rows'] += 1
-        except Exception as exc:
-            pprint(f'row with uuid {uuid} failed: {str(exc)}')
-            stats['failed_rows'] += 1
+        if exists_in_db:
+            __update_row(data_type, row)
+            stats['updated_rows'] += 1
+        else:
+            __insert_to_db(data_type, row)
+            stats['inserted_rows'] += 1
 
     return _handler
 
@@ -93,6 +89,8 @@ def import_waze_data_to_db() -> None:
         dataflow = __get_insertion_flow(field, path=data_path, stats=stats)
 
         dataflow.process()
+
+        print(f'Finished processing {field}!')
 
         print('Committing changes to DB...')
 
