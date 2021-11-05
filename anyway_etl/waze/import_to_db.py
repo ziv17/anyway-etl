@@ -16,6 +16,10 @@ from anyway_etl.config import ANYWAY_ETL_DATA_ROOT_PATH
 
 
 @session_decorator
+def __get_session(session: Session):
+    return session
+
+
 def __does_exist_in_db(session: Session, select_query: str, uuid: str) -> bool:
     query_with_uuid = select_query.format(uuid=uuid)
 
@@ -31,12 +35,10 @@ def __does_exist_in_db(session: Session, select_query: str, uuid: str) -> bool:
     return count > 0
 
 
-@session_decorator
 def __insert_to_db(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
     session.add(data_type(**row))
 
 
-@session_decorator
 def __update_row(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
     row['update_time'] = datetime.now()
 
@@ -47,32 +49,31 @@ def __update_row(session: Session, data_type: WAZE_TYPE, row: dict) -> None:
         update(row)
 
 
-@session_decorator
 def __commit_all_changes_to_db(session: Session) -> None:
     session.commit()
 
 
-def __get_row_handler(field: str, stats: dict) -> Callable[[dict], None]:
+def __get_row_handler(field: str, stats: dict, session: Session) -> Callable[[dict], None]:
     field_queries = QUERIES.get(field)
     select_query = field_queries.get("select_count")
     data_type = TYPES_MAPPING.get(field)
 
     def _handler(row: dict) -> None:
         uuid = row.get("uuid")
-        exists_in_db = __does_exist_in_db(select_query, uuid)
+        exists_in_db = __does_exist_in_db(session, select_query, uuid)
 
         if exists_in_db:
-            __update_row(data_type, row)
+            __update_row(session, data_type, row)
             stats['updated_rows'] += 1
         else:
-            __insert_to_db(data_type, row)
+            __insert_to_db(session, data_type, row)
             stats['inserted_rows'] += 1
 
     return _handler
 
 
-def __get_insertion_flow(field: str, path: str, stats: dict) -> DF.Flow:
-    handler = __get_row_handler(field, stats)
+def __get_insertion_flow(field: str, path: str, stats: dict, session: Session) -> DF.Flow:
+    handler = __get_row_handler(field, stats, session)
 
     return DF.Flow(DF.load(path), handler)
 
@@ -86,7 +87,10 @@ def import_waze_data_to_db() -> None:
 
         stats = defaultdict(int)
 
-        dataflow = __get_insertion_flow(field, path=data_path, stats=stats)
+        session = __get_session()
+
+        dataflow = __get_insertion_flow(
+            field, path=data_path, stats=stats, session=session)
 
         dataflow.process()
 
@@ -94,14 +98,8 @@ def import_waze_data_to_db() -> None:
 
         print('Committing changes to DB...')
 
-        __commit_all_changes_to_db()
+        __commit_all_changes_to_db(session)
 
         print(f'Finished importing {field}!')
 
         pprint(stats)
-
-        print(f'Removing local waze {field}...')
-
-        shutil.rmtree(path=data_path, ignore_errors=True)
-
-        print('Removed!')
