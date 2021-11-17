@@ -1,6 +1,7 @@
 import click
 
 from .cbs.cli import cbs
+from .waze.cli import waze
 from . import anyway_kubectl
 
 
@@ -11,6 +12,7 @@ def main():
 
 
 main.add_command(cbs)
+main.add_command(waze)
 
 
 @main.command(context_settings={"allow_interspersed_args": False})
