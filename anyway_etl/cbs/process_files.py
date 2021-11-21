@@ -9,7 +9,6 @@ import dataflows as DF
 
 from .config import (
     CBS_EMAILS_DATA_ROOT_PATH, CBS_FILES_ROOT_PATH,
-    PREPROCESS_FILES_DEFAULT_LIMIT_ROWS,
     CBS_YEARLY_DIRECTORIES_ROOT_PATH
 )
 
@@ -24,16 +23,6 @@ CBS_FILES_HEBREW = {
     "klali": "AccData",
     "rechovot": "DicStreets",
 }
-
-
-def limit_last_rows(limit_rows):
-
-    def _iterator(rows):
-        for i, row in enumerate(rows):
-            if i < limit_rows:
-                yield row
-
-    return _iterator
 
 
 def extract_zip_files(row):
@@ -92,14 +81,11 @@ def save_to_directory_structure(row):
         shutil.copy(file.path, target_file_path)
 
 
-
-def main(limit_rows=None):
-    limit_rows = int(limit_rows) if limit_rows else PREPROCESS_FILES_DEFAULT_LIMIT_ROWS
-    stats = defaultdict
+def main():
+    stats = defaultdict(int)
     _, df_stats = DF.Flow(
         DF.load(os.path.join(CBS_EMAILS_DATA_ROOT_PATH, 'datapackage.json')),
         DF.sort_rows('mtime', reverse=True),
-        limit_last_rows(limit_rows),
         DF.add_field('extracted_path', 'string'),
         extract_zip_files,
         update_cbs_files_names,
@@ -111,4 +97,4 @@ def main(limit_rows=None):
         DF.printer()
     ).process()
     pprint(df_stats)
-    pprint(stats)
+    pprint(dict(stats))

@@ -15,5 +15,3 @@ IMAP_MAIL_DIR = os.environ.get('IMAP_MAIL_DIR', "cbs/data")
 IMAP_MAIL_USER = os.environ.get('IMAP_MAIL_USER')
 IMAP_MAIL_PASSWORD = os.environ.get('IMAP_MAIL_PASSWORD')
 IMAP_MAIL_HOST = os.environ.get('IMAP_MAIL_HOST', "imap.gmail.com")
-
-PREPROCESS_FILES_DEFAULT_LIMIT_ROWS = int(os.environ.get('PREPROCESS_FILES_DEFAULT_LIMIT_ROWS', '2'))
