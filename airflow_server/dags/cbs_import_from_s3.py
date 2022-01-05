@@ -14,7 +14,7 @@ dag_kwargs = dict(
 )
 
 
-with DAG('fill-infographics-cache', **dag_kwargs) as cbs_import_from_s3:
+with DAG('cbs-import-from-s3', **dag_kwargs) as cbs_import_from_s3:
     CliBashOperator(
         'anyway-etl anyway-kubectl-exec python3 main.py process cbs --source s3'
         '{% if dag_run.conf.get("load_start_year") %} --load-start-year {{ dag_run.conf["load_start_year"] }}{% endif %}',
