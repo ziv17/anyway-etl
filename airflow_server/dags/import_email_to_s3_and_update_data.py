@@ -14,7 +14,7 @@ dag_kwargs = dict(
 )
 
 
-with DAG('import_email_to_s3_and_update_data', **dag_kwargs) as fill_infographics_cache_dag_for_streets:
+with DAG('import-email-to-s3-and-update-data', **dag_kwargs) as import_email_to_s3_and_update_data:
     CliBashOperator(
         'anyway-etl anyway-kubectl-exec python3 main.py scripts importemail',
         task_id='import-email-to-s3'
