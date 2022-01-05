@@ -8,7 +8,7 @@ dag_kwargs = dict(
     default_args={
         'owner': 'airflow',
     },
-    schedule_interval='@weekly',
+    schedule_interval='@monthly',
     catchup=False,
     start_date=days_ago(2),
 )
@@ -22,6 +22,9 @@ with DAG('import_email_to_s3_and_update_data', **dag_kwargs) as fill_infographic
         'anyway-etl anyway-kubectl-exec python3 main.py process cbs --source s3'
         '{% if dag_run.conf.get("load_start_year") %} --load-start-year {{ dag_run.conf["load_start_year"] }}{% endif %}',
         task_id='cbs-import-from-s3'
+    ) >> CliBashOperator(
+        'anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache --update',
+        task_id='fill-infographics-cache'
     ) >> CliBashOperator(
         'anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache-for-road-segments',
         task_id='fill-infographics-cache-for-road-segments'
