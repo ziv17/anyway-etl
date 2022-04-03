@@ -23,9 +23,6 @@ with DAG('import-email-to-s3-and-update-data', **dag_kwargs) as import_email_to_
         '{% if dag_run.conf.get("load_start_year") %} --load_start_year {{ dag_run.conf["load_start_year"] }}{% endif %}',
         task_id='cbs-import-from-s3'
     ) >> CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache --update',
-        task_id='fill-infographics-cache'
-    ) >> CliBashOperator(
         'anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache-for-road-segments',
         task_id='fill-infographics-cache-for-road-segments'
     ) >> CliBashOperator(
