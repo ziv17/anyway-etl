@@ -65,11 +65,11 @@ jobs:
             git config --global user.name "Anyway ETL CI" &&\
             git config --global user.email "anyway-etl-ci@localhost" &&\
             if [ "${TAG_NAME}" != "" ]; then
-              python update_yaml.py '{"anyway":{"etlNginxImage":"'"${NGINX_IMAGE_NAME}:${TAG_NAME}"'","airflowImage":"'"${AIRFLOW_IMAGE_NAME}:${TAG_NAME}"'"}}' ./values.auto-updated.yaml &&\
-              git add ./values.auto-updated.yaml && git commit -m "automatic update of prod etl anyway"
+              python update_yaml.py '{"etlNginxImage":"'"${NGINX_IMAGE_NAME}:${TAG_NAME}"'","airflowImage":"'"${AIRFLOW_IMAGE_NAME}:${TAG_NAME}"'"}' apps/anyway/values-anyway-auto-updated.yaml &&\
+              git add apps/anyway/values-anyway-auto-updated.yaml && git commit -m "automatic update of prod etl anyway"
             else
-              python update_yaml.py '{"anyway":{"etlNginxImageDev":"'"${NGINX_IMAGE_NAME}:${GITHUB_SHA}"'","airflowImageDev":"'"${AIRFLOW_IMAGE_NAME}:${GITHUB_SHA}"'"}}' ./values.auto-updated.yaml &&\
-              git add ./values.auto-updated.yaml && git commit -m "automatic update of dev etl anyway"
+              python update_yaml.py '{"etlNginxImageDev":"'"${NGINX_IMAGE_NAME}:${GITHUB_SHA}"'","airflowImageDev":"'"${AIRFLOW_IMAGE_NAME}:${GITHUB_SHA}"'"}' apps/anyway/values-anyway-auto-updated.yaml &&\
+              git add apps/anyway/values-anyway-auto-updated.yaml && git commit -m "automatic update of dev etl anyway"
             fi &&\
             git push origin master
           fi
