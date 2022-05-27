@@ -1,4 +1,5 @@
 from airflow import DAG
+from airflow.utils.dates import days_ago
 
 from anyway_etl_airflow.operators.cli_bash_operator import CliBashOperator
 
