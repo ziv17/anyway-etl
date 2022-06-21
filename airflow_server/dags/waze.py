@@ -8,7 +8,9 @@ dag_kwargs = dict(
     default_args={
         "owner": "airflow",
     },
-    schedule_interval="*/5 * * * *",  # Every 5 minutes
+    # disabled due to extreme load on DB and infrastructure
+    # do not enable a schedule before fixing this dag logic to be more efficient
+    schedule_interval=None,
     catchup=False,
     start_date=days_ago(2),
 )
