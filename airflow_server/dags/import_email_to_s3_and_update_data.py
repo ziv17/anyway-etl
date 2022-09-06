@@ -10,7 +10,6 @@ dag_kwargs = dict(
     },
     schedule_interval='@weekly',
     catchup=False,
-    start_date=days_ago(2),
 )
 
 
