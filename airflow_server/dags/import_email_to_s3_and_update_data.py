@@ -1,6 +1,5 @@
 from airflow import DAG
-from airflow.utils.dates import days_ago
-
+import pendulum
 from anyway_etl_airflow.operators.cli_bash_operator import CliBashOperator
 
 
@@ -10,6 +9,7 @@ dag_kwargs = dict(
     },
     schedule_interval='@weekly',
     catchup=False,
+    start_date=pendulum.datetime(2022, 10, 1, tz="Asia/Jerusalem"),
 )
 
 
