@@ -7,9 +7,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - env:
-        ETL_IMAGE_NAME: "docker.pkg.github.com/hasadna/anyway-etl/anyway-etl"
-        NGINX_IMAGE_NAME: "docker.pkg.github.com/hasadna/anyway-etl/anyway-etl-nginx"
-        AIRFLOW_IMAGE_NAME: "docker.pkg.github.com/hasadna/anyway-etl/anyway-etl-airflow"
+        ETL_IMAGE_NAME: "ghcr.io/data-for-change/anyway-etl/anyway-etl"
+        NGINX_IMAGE_NAME: "ghcr.io/data-for-change/anyway-etl/anyway-etl-nginx"
+        AIRFLOW_IMAGE_NAME: "ghcr.io/data-for-change/anyway-etl/anyway-etl-airflow"
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DFC_K8S_DEPLOY_KEY: ${{ secrets.DFC_K8S_DEPLOY_KEY }}
       run: |
@@ -18,7 +18,7 @@ jobs:
         else
           TAG_NAME=""
         fi
-        echo "${GITHUB_TOKEN}" | docker login docker.pkg.github.com -u hasadna --password-stdin &&\
+        echo "${GITHUB_TOKEN}" | docker login ghcr.io -u data-for-change --password-stdin &&\
         if docker pull "${ETL_IMAGE_NAME}:latest"; then
           CACHE_FROM_ARG="--cache-from ${ETL_IMAGE_NAME}:latest"
         else
@@ -47,7 +47,7 @@ jobs:
           PUSH_TAG=latest
         elif [ "${TAG_NAME}" != "" ]; then
           PUSH_TAG="${TAG_NAME}"
-        fi
+        fi &&\
         if [ "${PUSH_TAG}" != "" ]; then
           docker tag etl "${ETL_IMAGE_NAME}:${PUSH_TAG}" &&\
           docker push "${ETL_IMAGE_NAME}:${PUSH_TAG}" &&\

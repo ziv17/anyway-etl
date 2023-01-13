@@ -14,6 +14,6 @@ For more advanced documentation see the [docs](docs) directory.
 * Every push to `main` branch causes deployment to the Kubernetes cluster's `anyway-dev` environment
     * Except for changes to the `anyway` dependency, which is picked up automatically
       by the Airflow server and don't require a deployment
-* Every [release](https://github.com/hasadna/anyway-etl/releases) causes deployment 
+* Every [release](https://github.com/data-for-change/anyway-etl/releases) causes deployment 
   to the Kubernetes cluster's `anyway` environment (the production environment)
 

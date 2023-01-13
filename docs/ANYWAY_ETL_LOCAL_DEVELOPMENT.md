@@ -9,7 +9,7 @@ use the Docker Compose environment for easier local development.
 Prerequisites:
 
 * [Python 3.8](https://www.python.org/downloads/)
-* A clone of [anyway](https://github.com/hasadna/anyway) repository at `../anyway`
+* A clone of [anyway](https://github.com/data-for-change/anyway) repository at `../anyway`
 
 Create a virtualenv
 (The Python binary name might be just Python, depending on how you installed it,

@@ -7,7 +7,7 @@ WORKDIR /srv
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 ARG ANYWAY_COMMIT=dev
-RUN pip install -e git+https://github.com/hasadna/anyway@${ANYWAY_COMMIT}#egg=anyway
+RUN pip install -e git+https://github.com/data-for-change/anyway@${ANYWAY_COMMIT}#egg=anyway
 COPY static_data ./static_data
 COPY setup.py ./setup.py
 COPY anyway_etl ./anyway_etl
