@@ -16,6 +16,6 @@ dag_kwargs = dict(
 
 with DAG('test-logs', **dag_kwargs) as test_logs:
     CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py scripts test-airflow',
+        cmd='anyway-etl anyway-kubectl-exec python3 main.py scripts test-airflow',
         task_id='test_logs'
     )

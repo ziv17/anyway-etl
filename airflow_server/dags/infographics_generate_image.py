@@ -14,8 +14,7 @@ dag_kwargs = dict(
 with DAG('generate-infographics-images', **dag_kwargs,      params={
     "newsflash_id": Param(0, type="integer"),
 },) as fill_infographics_cache_dag:
-    CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 \
+    CliBashOperator(cmd='anyway-etl anyway-kubectl-exec python3 \
             main.py generate infographics_pictures --id {dag_kwargs[params][newsflash_id]}',
         task_id='generate-infographics-images',
     )

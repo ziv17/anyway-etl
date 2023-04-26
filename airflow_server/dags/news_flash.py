@@ -17,7 +17,7 @@ dag_kwargs = dict(
 
 with DAG('process-news-flash', **dag_kwargs, schedule_interval='*/5 * * * *') as process_news_flash_dag:
     CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py process news-flash',
+        cmd='anyway-etl anyway-kubectl-exec python3 main.py process news-flash',
         task_id='process-news-flash'
     )
 
@@ -26,7 +26,7 @@ with DAG('update-news-flash', **dag_kwargs, schedule_interval=None,
          description='Update a single news flash item based on id, must run manually with json, example:'
                      '{"news_flash_id": "65516"}') as update_news_flash_dag:
     CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py '
+        cmd='anyway-etl anyway-kubectl-exec python3 main.py '
         'update-news-flash update --news_flash_id {{ dag_run.conf["news_flash_id"] }}',
         task_id='update-news-flash'
     )

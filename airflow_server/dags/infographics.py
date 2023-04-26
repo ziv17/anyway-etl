@@ -15,7 +15,6 @@ dag_kwargs = dict(
 
 
 with DAG('fill-infographics-cache', **dag_kwargs) as fill_infographics_cache_dag:
-    CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache --update',
+    CliBashOperator(cmd='anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache --update',
         task_id='fill-infographics-cache'
     )

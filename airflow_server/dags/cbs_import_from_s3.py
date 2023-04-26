@@ -15,8 +15,7 @@ dag_kwargs = dict(
 
 
 with DAG('cbs-import-from-s3', **dag_kwargs) as cbs_import_from_s3:
-    CliBashOperator(
-        cmd='anyway-etl anyway-kubectl-exec python3 main.py process cbs --source s3'
+    CliBashOperator(cmd='anyway-etl anyway-kubectl-exec python3 main.py process cbs --source s3'
         '{% if dag_run.conf.get("load_start_year") %} --load_start_year {{ dag_run.conf["load_start_year"] }}{% endif %}',
         task_id='cbs-import-from-s3'
     )

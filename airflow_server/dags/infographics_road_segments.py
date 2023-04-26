@@ -15,7 +15,6 @@ dag_kwargs = dict(
 
 
 with DAG('fill-infographics-cache-for-road-segments', **dag_kwargs) as fill_infographics_cache_dag_for_road_segments:
-    CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache-for-road-segments',
+    CliBashOperator(cmd='anyway-etl anyway-kubectl-exec python3 main.py process infographics-data-cache-for-road-segments',
         task_id='fill-infographics-cache-for-road-segments'
     )
