@@ -18,8 +18,8 @@ dag_kwargs = dict(
 
 with DAG("waze", **dag_kwargs) as waze_dag:
     (
-        CliBashOperator("anyway-etl waze get-data", task_id="get-waze-data")
+        CliBashOperator(cmd="anyway-etl waze get-data", task_id="get-waze-data")
         >> CliBashOperator(
-            "anyway-etl waze import-to-db", task_id="import-waze-data-to-db"
+            cmd="anyway-etl waze import-to-db", task_id="import-waze-data-to-db"
         )
     )

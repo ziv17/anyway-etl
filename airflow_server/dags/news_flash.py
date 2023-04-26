@@ -34,7 +34,7 @@ with DAG('update-news-flash', **dag_kwargs, schedule_interval=None,
 
 with DAG('test-anyway-kubectl-exec', **dag_kwargs, schedule_interval=None) as test_anyway_kubectl_Exec:
     CliBashOperator(
-        '''anyway-etl anyway-kubectl-exec -- python3 -c "{}"'''.format(dedent("""
+        cmd='''anyway-etl anyway-kubectl-exec -- python3 -c "{}"'''.format(dedent("""
         import logging, time
         logging.basicConfig(level=logging.DEBUG)
         for i in range(20):

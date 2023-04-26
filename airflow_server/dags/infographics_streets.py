@@ -16,6 +16,6 @@ dag_kwargs = dict(
 
 with DAG('fill-infographics-cache-for-streets', **dag_kwargs) as fill_infographics_cache_dag_for_streets:
     CliBashOperator(
-        'anyway-etl anyway-kubectl-exec python3 main.py process cache update-street',
+        cmd='anyway-etl anyway-kubectl-exec python3 main.py process cache update-street',
         task_id='fill-infographics-cache-for-streets'
     )
