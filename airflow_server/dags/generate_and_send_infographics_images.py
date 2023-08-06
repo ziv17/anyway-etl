@@ -28,6 +28,6 @@ with DAG('generate-and-send-infographics-images', **dag_kwargs, schedule_interva
     ) >> \
     CliBashOperator(
         cmd='anyway-etl anyway-kubectl-exec python3 main.py '
-            'telegram publish-notification --id {{ dag_run.conf["news_flash_id"] }}',
+            'telegram send-notification --id {{ dag_run.conf["news_flash_id"] }}',
         task_id='send-infographics-to-telegram'
     )
