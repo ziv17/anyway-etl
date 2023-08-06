@@ -23,7 +23,7 @@ with DAG('generate-and-send-infographics-images', **dag_kwargs, schedule_interva
     ) >> \
     CliBashOperator(
         cmd='anyway-etl anyway-kubectl-exec python3 main.py '
-            'upload generated_infographics --id {{ dag_run.conf["news_flash_id"] }}',
+            'upload generated-infographics --id {{ dag_run.conf["news_flash_id"] }}',
         task_id='upload-infographics-images'
     ) >> \
     CliBashOperator(
