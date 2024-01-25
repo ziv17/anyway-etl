@@ -11,4 +11,4 @@ if not ANYWAY_ETL_STATIC_DATA_ROOT_PATH:
 
 SQLALCHEMY_URL = os.environ.get('SQLALCHEMY_URL', 'postgresql://anyway:anyway@localhost:9876/anyway')
 
-ANYWAY_KUBECTL_NAMESPACE = os.environ.get('ANYWAY_KUBECTL_NAMESPACE')
+ANYWAY_MAIN_CONTAINER_NAME = os.environ.get('ANYWAY_MAIN_CONTAINER_NAME')
