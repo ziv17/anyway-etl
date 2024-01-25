@@ -55,7 +55,7 @@ jobs:
           docker push "${AIRFLOW_IMAGE_NAME}:${PUSH_TAG}" &&\
           docker tag aenginx "${NGINX_IMAGE_NAME}:${PUSH_TAG}" &&\
           docker push "${NGINX_IMAGE_NAME}:${PUSH_TAG}" &&\
-          if [ "${TAG_NAME}" != "" ] || bin/ci_check_allow_deploy.sh; then
+          if [ "${TAG_NAME}" != "" ]; then
             cd `mktemp -d` &&\
             echo "${DFC_IAC_DEPLOY_KEY}" > dfc_iac_deploy_key &&\
             chmod 400 dfc_iac_deploy_key &&\
@@ -65,8 +65,7 @@ jobs:
             git config --global user.name "Anyway ETL CI" &&\
             git config --global user.email "anyway-etl-ci@localhost" &&\
             bin/update_anyway_env.py '{"etlNginxImage":"'"${NGINX_IMAGE_NAME}:${TAG_NAME}"'","airflowImage":"'"${AIRFLOW_IMAGE_NAME}:${TAG_NAME}"'"}' &&\
-            git add apps/anyway/.env && git commit -m "automatic update of prod etl anyway"
-            &&\
+            git add apps/anyway/.env && git commit -m "automatic update of prod etl anyway" &&\
             git push origin main
           fi
         fi
