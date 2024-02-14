@@ -31,6 +31,14 @@ with DAG('update-news-flash', **dag_kwargs, schedule_interval=None,
         task_id='update-news-flash'
     )
 
+with DAG('update-all-news-flash', **dag_kwargs, schedule_interval=None,
+         description='Update all news flash') as update_all_news_flash_dag:
+    CliBashOperator(
+        cmd='anyway-etl anyway-kubectl-exec python3 main.py '
+        'update-news-flash update --update_cbs_location_only',
+        task_id='update-all-news-flash'
+    )
+
 
 with DAG('test-anyway-kubectl-exec', **dag_kwargs, schedule_interval=None) as test_anyway_kubectl_Exec:
     CliBashOperator(
